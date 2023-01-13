@@ -4,5 +4,6 @@
     "target": "es6",
     "outDir": "./dist",
     "esModuleInterop": true
-  }
+  },
+  "exclude": ["./node_modules"]
 }
