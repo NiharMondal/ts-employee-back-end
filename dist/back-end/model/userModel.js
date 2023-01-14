@@ -6,33 +6,53 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const { Schema, model } = mongoose_1.default;
 const userSchema = new Schema({
-    firstName: [String, "Please Provide Firstname"],
-    lastName: [String, "Please Provide Lastname"],
-    email: [String, "Please provide your valid email address"],
-    sex: {
+    firstName: {
         type: String,
-        enum: ["Male", "Female", "Others"],
-        reduired: [true, "Please provide your gender"],
+        required: [true, "Please Provide Firstname"],
+    },
+    lastName: {
+        type: String,
+        required: [true, "Please Provide Lastname"],
+    },
+    userName: {
+        type: String,
+        required: [true, "Please Provide your username"],
+    },
+    gender: {
+        type: String,
+        reduired: [true, "Please select your gender"],
+    },
+    contactInfo: {
+        email: {
+            type: String,
+            required: [true, "Please Provide valid email address"],
+        },
+        phone: {
+            type: String,
+            required: [true, "Please provide phone number"],
+        },
+        website: {
+            type: String,
+        },
     },
     address: {
-        country: {
-            type: [String, "Please provide your country name"],
-        },
         city: {
-            type: [String, "Please provide city name"],
+            type: String,
+            required: [true, "Please provide city name"],
+        },
+        country: {
+            type: String,
+            required: [true, "Please provide country name"],
         },
     },
-    phone: [String, "Please provide phone number"],
-    website: [String, "Please provide website link"],
     role: {
         type: String,
-        enum: ["Moderator", "User", "Editor"],
-        reduired: [true, "Please provide your category"],
+        required: true
     },
     profession: {
         type: String,
-        enum: ["Web Developer", "Software Engeneer", "Doctor", "Ethical Hacker"],
-        reduired: [true, "Please provide your profession"],
+        reduired: true
     },
-});
-exports.default = model('User', userSchema);
+}, { timestamps: true });
+const Users = model("Users-list", userSchema);
+exports.default = Users;

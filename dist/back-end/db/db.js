@@ -15,11 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield (yield mongoose_1.default.connect(process.env.MONGO_URI)).set({ strictQuery: false });
+        yield yield (yield mongoose_1.default.connect(process.env.MONGO_URI)).set({ strictQuery: true });
         console.log("MongoDB connected");
     }
     catch (err) {
         console.error(err);
     }
 });
-module.exports = connectDB;
+exports.default = connectDB;

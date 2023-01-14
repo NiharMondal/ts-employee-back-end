@@ -10,13 +10,13 @@ exports.nav = [
     },
 ];
 exports.selectOptions = [
-    { label: "User", value: "user" },
-    { label: "Moderator", value: "moderaton" },
-    { label: "Editor", value: "editor" },
+    { label: "User", value: "User" },
+    { label: "Moderator", value: "Moderator" },
+    { label: "Editor", value: "Editor" },
 ];
 exports.selectOccupation = [
-    { label: "Web Developer", value: "web developer" },
-    { label: "Software Engeneer", value: "software engeneer" },
-    { label: "Doctor", value: "doctor" },
-    { label: "Ethical Hacker", value: "ethical hacker" },
+    { label: "Web Developer", value: "Web Developer" },
+    { label: "Engineer", value: "Engineer" },
+    { label: "Doctor", value: "Doctor" },
+    { label: "Ethical Hacker", value: "Ethical Hacker" },
 ];

@@ -10,5 +10,5 @@ const usersRoute_1 = __importDefault(require("./routes/usersRoute"));
 const authRouts_1 = __importDefault(require("./routes/authRouts"));
 //use router
 //user router
-app_1.default.use("/api/v1/users/", usersRoute_1.default);
+app_1.default.use("/api/v1/user", usersRoute_1.default);
 app_1.default.use("/api/v1/auth", authRouts_1.default);

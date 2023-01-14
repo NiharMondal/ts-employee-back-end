@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
@@ -46,14 +45,11 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: {
-      values: ["User", "Moderator", "Editor"],
-      message: "Please Provide role",
-    },
+    required: true
   },
   profession: {
     type: String,
-    reduired: [true, "Please provide your profession"],
+    reduired: true
   },
 },{timestamps: true});
 const Users = model("Users-list", userSchema);
