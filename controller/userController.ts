@@ -1,54 +1,19 @@
 import { Request, Response } from "express";
 import UserModel from "../model/userModel";
-
-
-type UserProps = {
-  firstName: string;
-  lastName: string;
-  gender: string | null;
-  userName: string;
-  email: string;
-  phone: string;
-  website: string;
-  city: string;
-  country: string;
-  role: string | null;
-  profession: string | null;
-};
-
+import { TUser } from "../modelTypes/types";
 
 //create user
 export const createUser = async (req: Request, res: Response) => {
-  const {
-    firstName,
-    lastName,
-    userName,
-    gender,
-    email,
-    phone,
-    website,
-    city,
-    country,
-    role,
-    profession,
-  }: UserProps = req.body;
+  const { firstName, lastName, userName, gender, age, email, role }:TUser = req.body;
   try {
     const createdUser = await UserModel.create({
       firstName,
       lastName,
       userName,
+      email,
       gender,
-      contactInfo: {
-        email,
-        phone,
-        website,
-      },
-      address: {
-        city,
-        country,
-      },
+      age,
       role,
-      profession,
     });
 
     createdUser.save((err) => {
@@ -67,12 +32,9 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const allUsers = await UserModel.find({});
+    const allUsers = await UserModel.find();
     if (allUsers) {
-      return res.status(200).json({
-        success: "Please Wait! We are geting your information",
-        allUsers,
-      });
+      return res.status(200).json(allUsers);
     }
     return res.status(400).json({ error: "Something went wrong" });
   } catch (error) {
@@ -83,14 +45,12 @@ export const getAllUsers = async (req: Request, res: Response) => {
 //get user by id
 export const getUserById = async (req: Request, res: Response) => {
   try {
-    const { id } =  req.params;
+    const { id } = req.params;
     const findById = await UserModel.findById({ _id: id });
     if (!findById) {
       return res.status(404).json({ error: "Id not found!" });
     }
-    return res
-      .status(200)
-      .json({ success: "Here is your information", findById });
+    return res.status(200).json(findById);
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
@@ -100,9 +60,9 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const { id } =  req.params;
-    const deleteUser = await UserModel.deleteOne({ _id: id });
+    const { id } = req.params;
 
+    const deleteUser = await UserModel.deleteOne({ _id: id });
     if (deleteUser) {
       return res
         .status(200)
@@ -116,19 +76,8 @@ export const deleteUser = async (req: Request, res: Response) => {
 //update user
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const {
-    firstName,
-    lastName,
-    userName,
-    gender,
-    email,
-    phone,
-    website,
-    city,
-    country,
-    role,
-    profession,
-  } = req.body;
+  const { firstName, lastName, userName, email, gender, age, role }: TUser =
+    req.body;
 
   //set update field
   try {
@@ -138,19 +87,11 @@ export const updateUser = async (req: Request, res: Response) => {
         $set: {
           firstName,
           lastName,
+          email,
           userName,
           gender,
-          contactInfo: {
-            email,
-            phone,
-            website,
-          },
-          address: {
-            city,
-            country,
-          },
+          age,
           role,
-          profession,
         },
       }
     );

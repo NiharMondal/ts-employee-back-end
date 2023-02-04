@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userLogin = exports.userResiter = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const authModel_1 = __importDefault(require("../model/authModel"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 //user registration
 const userResiter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, password } = req.body;
@@ -31,8 +32,15 @@ const userResiter = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             email,
             password: yield bcrypt_1.default.hash(password, 12),
         });
-        yield createUser.save();
-        return res.status(201).json({ success: "Registration successfull" });
+        createUser.save((err) => {
+            if (!err) {
+                const authToken = jsonwebtoken_1.default.sign({ user: createUser }, process.env.TOKEN_SECRET);
+                return res
+                    .status(201)
+                    .cookie("authToken", authToken)
+                    .json({ success: "Registration successfull", authToken });
+            }
+        });
     }
     catch (error) {
         return res.status(400).json({ error: "Please Provide every input field" });

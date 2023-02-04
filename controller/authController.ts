@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import AuthModel from "../model/authModel";
+import jwt from "jsonwebtoken";
 
 //login user types
 interface LoginInfo {
@@ -29,8 +30,18 @@ export const userResiter = async (req: Request, res: Response) => {
       email,
       password: await bcrypt.hash(password, 12),
     });
-    await createUser.save();
-    return res.status(201).json({ success: "Registration successfull" });
+    createUser.save((err) => {
+      if (!err) {
+        const authToken = jwt.sign(
+          { user: createUser },
+          process.env.TOKEN_SECRET
+        );
+        return res
+          .status(201)
+          .cookie("authToken", authToken)
+          .json({ success: "Registration successfull", authToken });
+      }
+    });
   } catch (error) {
     return res.status(400).json({ error: "Please Provide every input field" });
   }

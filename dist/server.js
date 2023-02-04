@@ -8,7 +8,8 @@ const app_1 = __importDefault(require("./app"));
 //import router
 const usersRoute_1 = __importDefault(require("./routes/usersRoute"));
 const authRouts_1 = __importDefault(require("./routes/authRouts"));
-//use router
+// ===========use router =================
 //user router
 app_1.default.use("/api/v1/user", usersRoute_1.default);
+//auth router
 app_1.default.use("/api/v1/auth", authRouts_1.default);

@@ -16,24 +16,16 @@ exports.updateUser = exports.deleteUser = exports.getUserById = exports.getAllUs
 const userModel_1 = __importDefault(require("../model/userModel"));
 //create user
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { firstName, lastName, userName, gender, email, phone, website, city, country, role, profession, } = req.body;
+    const { firstName, lastName, userName, gender, age, email, role } = req.body;
     try {
         const createdUser = yield userModel_1.default.create({
             firstName,
             lastName,
             userName,
+            email,
             gender,
-            contactInfo: {
-                email,
-                phone,
-                website,
-            },
-            address: {
-                city,
-                country,
-            },
+            age,
             role,
-            profession,
         });
         createdUser.save((err) => {
             if (!err) {
@@ -51,12 +43,9 @@ exports.createUser = createUser;
 // get all user
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const allUsers = yield userModel_1.default.find({});
+        const allUsers = yield userModel_1.default.find();
         if (allUsers) {
-            return res.status(200).json({
-                success: "Please Wait! We are geting your information",
-                allUsers,
-            });
+            return res.status(200).json(allUsers);
         }
         return res.status(400).json({ error: "Something went wrong" });
     }
@@ -73,9 +62,7 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (!findById) {
             return res.status(404).json({ error: "Id not found!" });
         }
-        return res
-            .status(200)
-            .json({ success: "Here is your information", findById });
+        return res.status(200).json(findById);
     }
     catch (error) {
         return res.status(500).json({ error: "Internal server error" });
@@ -101,26 +88,18 @@ exports.deleteUser = deleteUser;
 //update user
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { firstName, lastName, userName, gender, email, phone, website, city, country, role, profession, } = req.body;
+    const { firstName, lastName, userName, email, gender, age, role } = req.body;
     //set update field
     try {
         const updateById = yield userModel_1.default.updateOne({ _id: id }, {
             $set: {
                 firstName,
                 lastName,
+                email,
                 userName,
                 gender,
-                contactInfo: {
-                    email,
-                    phone,
-                    website,
-                },
-                address: {
-                    city,
-                    country,
-                },
+                age,
                 role,
-                profession,
             },
         });
         if (updateById) {

@@ -1,11 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const { Schema, model } = mongoose_1.default;
-const userSchema = new Schema({
+const mongoose_1 = require("mongoose");
+const userSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
         required: [true, "Please Provide Firstname"],
@@ -20,39 +16,19 @@ const userSchema = new Schema({
     },
     gender: {
         type: String,
-        reduired: [true, "Please select your gender"],
+        reduired: [true, "Please provide your gender"],
     },
-    contactInfo: {
-        email: {
-            type: String,
-            required: [true, "Please Provide valid email address"],
-        },
-        phone: {
-            type: String,
-            required: [true, "Please provide phone number"],
-        },
-        website: {
-            type: String,
-        },
+    email: {
+        type: String,
+        required: [true, "Please Provide valid email address"],
     },
-    address: {
-        city: {
-            type: String,
-            required: [true, "Please provide city name"],
-        },
-        country: {
-            type: String,
-            required: [true, "Please provide country name"],
-        },
+    age: {
+        type: String,
+        required: [true, "Please Provide your age"],
     },
     role: {
         type: String,
-        required: true
-    },
-    profession: {
-        type: String,
-        reduired: true
+        required: true,
     },
 }, { timestamps: true });
-const Users = model("Users-list", userSchema);
-exports.default = Users;
+exports.default = (0, mongoose_1.model)("Users-list", userSchema);

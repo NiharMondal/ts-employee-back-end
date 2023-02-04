@@ -1,57 +1,41 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
+import { TUser } from "../modelTypes/types";
 
-const { Schema, model } = mongoose;
+const userSchema = new Schema<TUser>(
+  {
+    firstName: {
+      type: String,
+      required: [true, "Please Provide Firstname"],
+    },
+    lastName: {
+      type: String,
+      required: [true, "Please Provide Lastname"],
+    },
 
-const userSchema = new Schema({
-  firstName: {
-    type: String,
-    required: [true, "Please Provide Firstname"],
-  },
-  lastName: {
-    type: String,
-    required: [true, "Please Provide Lastname"],
-  },
+    userName: {
+      type: String,
+      required: [true, "Please Provide your username"],
+    },
+    gender: {
+      type: String,
+      reduired: [true, "Please provide your gender"],
+    },
 
-  userName: {
-    type: String,
-    required: [true, "Please Provide your username"],
-  },
-  gender: {
-    type: String,
-    reduired: [true, "Please select your gender"],
-  },
-  contactInfo: {
     email: {
       type: String,
       required: [true, "Please Provide valid email address"],
     },
-    phone: {
+    age: {
       type: String,
-      required: [true, "Please provide phone number"],
+      required: [true, "Please Provide your age"],
     },
-    website: {
-      type: String,
-    },
-  },
-  address: {
-    city: {
-      type: String,
-      required: [true, "Please provide city name"],
-    },
-    country: {
-      type: String,
-      required: [true, "Please provide country name"],
-    },
-  },
-  role: {
-    type: String,
-    required: true
-  },
-  profession: {
-    type: String,
-    reduired: true
-  },
-},{timestamps: true});
-const Users = model("Users-list", userSchema);
 
-export default Users;
+    role: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+export default model("Users-list", userSchema);

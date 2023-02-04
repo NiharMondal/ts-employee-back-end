@@ -5,8 +5,9 @@ import app from "./app";
 import userRouter from "./routes/usersRoute";
 import authRouter from "./routes/authRouts";
 
-//use router
+// ===========use router =================
 //user router
 app.use("/api/v1/user", userRouter);
 
+//auth router
 app.use("/api/v1/auth", authRouter);

@@ -9,6 +9,8 @@ import connectDB from "./db/db";
 
 dotenv.config();
 connectDB();
+
+
 // ========== initializing app ============
 const app: Application = express();
 
