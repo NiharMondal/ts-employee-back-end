@@ -34,7 +34,7 @@ export const userResiter = async (req: Request, res: Response) => {
       if (!err) {
         const authToken = jwt.sign(
           { user: createUser },
-          process.env.TOKEN_SECRET
+          process.env.TOKEN_SECRET!
         );
         return res
           .status(201)

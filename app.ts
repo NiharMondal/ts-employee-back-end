@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 //import db
 import connectDB from "./db/db";
 
+
 dotenv.config();
 connectDB();
 
