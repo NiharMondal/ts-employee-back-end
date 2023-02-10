@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
+import { RegisterRequest } from "../modelTypes/types";
 
-const { Schema, model } = mongoose;
 
-const registerSchema = new Schema({
+const authSchema = new Schema({
   username: {
     type: String,
     required: [true, "Please provide your username"],
@@ -10,12 +10,12 @@ const registerSchema = new Schema({
   email: {
     type: String,
     required: [true, "Please provide your password"],
+    unique: [true, "This email has been taken"]
   },
   password: {
     type: String,
-    required: [true, "Please set your password"],
+    required: [true, "Password can not be empty"],
   },
 });
 
-const AuthUsers = model("AuthUsers", registerSchema);
-export default AuthUsers;
+export default  model<RegisterRequest>("AuthUsers", authSchema);

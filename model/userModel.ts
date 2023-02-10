@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { TUser } from "../modelTypes/types";
 
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema(
   {
     firstName: {
       type: String,
@@ -38,4 +38,4 @@ const userSchema = new Schema<TUser>(
   { timestamps: true }
 );
 
-export default model("Users-list", userSchema);
+export default model<TUser>("Users-list", userSchema);

@@ -10,12 +10,22 @@ export type TUser = {
 };
 
 //login user types
-export type LoginInfo = {
+export type LoginRequest = {
   email: string;
   password: string;
 };
-
+//login response from server
+export type LoginResponse = {
+  user: LoginRequest;
+  token: string;
+};
 //login user types extends with one extra property username
-export type RegisterInfo = {
+export type RegisterRequest = {
   username: string;
-} & LoginInfo;
+} & LoginRequest;
+
+//
+export type RegisterResponse = {
+  user: RegisterRequest;
+  token: string;
+};

@@ -1,6 +1,9 @@
+import cookieParser from "cookie-parser";
+
 // ================== import app ==============
 import app from "./app";
 
+app.use(cookieParser());
 //import router
 import userRouter from "./routes/usersRoute";
 import authRouter from "./routes/authRouts";
