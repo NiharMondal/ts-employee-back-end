@@ -1,11 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const { Schema, model } = mongoose_1.default;
-const registerSchema = new Schema({
+const mongoose_1 = require("mongoose");
+const authSchema = new mongoose_1.Schema({
     username: {
         type: String,
         required: [true, "Please provide your username"],
@@ -13,11 +9,11 @@ const registerSchema = new Schema({
     email: {
         type: String,
         required: [true, "Please provide your password"],
+        unique: [true, "This email has been taken"]
     },
     password: {
         type: String,
-        required: [true, "Please set your password"],
+        required: [true, "Password can not be empty"],
     },
 });
-const AuthUsers = model("AuthUsers", registerSchema);
-exports.default = AuthUsers;
+exports.default = (0, mongoose_1.model)("AuthUsers", authSchema);

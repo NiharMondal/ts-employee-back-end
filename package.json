@@ -4,7 +4,7 @@
   "description": "It's a node js project with typescript",
   "main": "server.js",
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon server.ts"
   },
