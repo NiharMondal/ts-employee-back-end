@@ -1,11 +1,11 @@
-
- 
-#### ***It is a Nodejs, Typescript project*** ####
-
+#### **_It is a Nodejs, Typescript project_**
 
 **Technoloy that are used in this project ---**
-- Node js   
+
+- Node js
 - Typscript
-- Express   
+- Express
+- Mongodb (for database)
+- Mongoose
 - Bcrypt for hashing password
 - Jsonwebtoken for token based authentication
