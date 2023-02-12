@@ -82,10 +82,11 @@ export const userLogin = async (req: Request, res: Response) => {
       .cookie("auth_token", token, { httpOnly: true })
       .status(200)
       .json({
-        user: { _id: checkUser._id, email: checkUser.email },
+        user: { _id: checkUser._id, email: checkUser.email,username: checkUser.username },
         token: token,
       });
   } catch (error) {
     return res.status(500).json({ error:error});
   }
+  
 };
