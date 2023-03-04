@@ -7,6 +7,7 @@ import {
   getAllUsers,
   getUserById,
   updateUser,
+  
 } from "../controller/userController";
 
 const userRouter: Router = Router();

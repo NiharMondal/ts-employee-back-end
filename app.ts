@@ -12,7 +12,7 @@ dotenv.config();
 
 // ========== initializing app ============
 const app: Application = express();
-
+connectDB();
 //middlewares
 app.use(cors());
 app.use(express.json());
@@ -26,7 +26,7 @@ const port = process.env.SERVER_PORT || 5000;
 
 app.listen(port, (): void => {
   console.log(`[Server]: app listening at http://localhost:${port}`);
-  connectDB();
+  
 });
 
 export default app;

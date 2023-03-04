@@ -4,7 +4,8 @@ import { TUser } from "../modelTypes/types";
 
 //create user
 export const createUser = async (req: Request, res: Response) => {
-  const { firstName, lastName, userName, gender, age, email, role }:TUser = req.body;
+  const { firstName, lastName, userName, gender, age, email, role }: TUser =
+    req.body;
   try {
     const createdUser = await UserModel.create({
       firstName,
@@ -28,15 +29,18 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-// get all user
+// get all user and also by queryString
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const allUsers = await UserModel.find();
-    if (allUsers) {
+    if (req.query) {
+      const queryUsers = await UserModel.find(req.query);
+      return res.status(200).json(queryUsers);
+    } else {
+      const allUsers = await UserModel.find();
+
       return res.status(200).json(allUsers);
     }
-    return res.status(400).json({ error: "Something went wrong" });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
