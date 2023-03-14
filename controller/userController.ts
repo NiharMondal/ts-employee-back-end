@@ -4,7 +4,8 @@ import { TUser } from "../modelTypes/types";
 
 //create user
 export const createUser = async (req: Request, res: Response) => {
-  const { firstName, lastName, userName, gender, age, email, role }:TUser = req.body;
+  const { firstName, lastName, userName, gender, age, email, role }: TUser =
+    req.body;
   try {
     const createdUser = await UserModel.create({
       firstName,
@@ -28,15 +29,48 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-// get all user
+// get all user and also by queryString
 
 export const getAllUsers = async (req: Request, res: Response) => {
+  const { gender, role } = req.query;
+
   try {
-    const allUsers = await UserModel.find();
-    if (allUsers) {
-      return res.status(200).json(allUsers);
+    //filter only by gender
+    if (gender && !role) {
+      const filterByGender = await UserModel.find({ gender: gender });
+      return res.status(200).json(filterByGender);
     }
-    return res.status(400).json({ error: "Something went wrong" });
+    //filter only by role
+    if (!gender && role) {
+      const filterByrole = await UserModel.find({ role: role });
+      return res.status(200).json(filterByrole);
+    }
+    //filter using both gender and role
+    if (gender && role) {
+      const filterByGender = await UserModel.find({
+        gender: gender,
+        role: role,
+      });
+      return res.status(200).json(filterByGender);
+    }
+
+    //without query
+
+    const allUsers = await UserModel.find();
+    return res.status(200).json(allUsers);
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getUserByQuery = async (req: Request, res: Response) => {
+  console.log("query: ", req.query);
+
+  try {
+    if (req.query) {
+      const queryUsers = await UserModel.find(req.query);
+      return res.status(200).json(queryUsers);
+    }
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }

@@ -11,12 +11,8 @@ import {
 
 const userRouter: Router = Router();
 
-
-
 //create and get all users
 userRouter.post("/", createUser).get("/", getAllUsers);
-
-
 
 userRouter
   //get single user by id
