@@ -53,9 +53,8 @@ export const getAllUsers = async (req: Request, res: Response) => {
       });
       return res.status(200).json(filterByGender);
     }
-
+    
     //without query
-
     const allUsers = await UserModel.find();
     return res.status(200).json(allUsers);
   } catch (error) {

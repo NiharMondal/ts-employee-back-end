@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.deleteUser = exports.getUserById = exports.getAllUsers = exports.createUser = void 0;
+exports.updateUser = exports.deleteUser = exports.getUserById = exports.getUserByQuery = exports.getAllUsers = exports.createUser = void 0;
 const userModel_1 = __importDefault(require("../model/userModel"));
 //create user
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -40,20 +40,50 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createUser = createUser;
-// get all user
+// get all user and also by queryString
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { gender, role } = req.query;
     try {
-        const allUsers = yield userModel_1.default.find();
-        if (allUsers) {
-            return res.status(200).json(allUsers);
+        //filter only by gender
+        if (gender && !role) {
+            const filterByGender = yield userModel_1.default.find({ gender: gender });
+            return res.status(200).json(filterByGender);
         }
-        return res.status(400).json({ error: "Something went wrong" });
+        //filter only by role
+        if (!gender && role) {
+            const filterByrole = yield userModel_1.default.find({ role: role });
+            return res.status(200).json(filterByrole);
+        }
+        //filter using both gender and role
+        if (gender && role) {
+            const filterByGender = yield userModel_1.default.find({
+                gender: gender,
+                role: role,
+            });
+            return res.status(200).json(filterByGender);
+        }
+        //without query
+        const allUsers = yield userModel_1.default.find();
+        return res.status(200).json(allUsers);
     }
     catch (error) {
         return res.status(500).json({ error: "Internal server error" });
     }
 });
 exports.getAllUsers = getAllUsers;
+const getUserByQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("query: ", req.query);
+    try {
+        if (req.query) {
+            const queryUsers = yield userModel_1.default.find(req.query);
+            return res.status(200).json(queryUsers);
+        }
+    }
+    catch (error) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.getUserByQuery = getUserByQuery;
 //get user by id
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
