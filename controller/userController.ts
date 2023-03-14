@@ -32,14 +32,44 @@ export const createUser = async (req: Request, res: Response) => {
 // get all user and also by queryString
 
 export const getAllUsers = async (req: Request, res: Response) => {
+  const { gender, role } = req.query;
+
+  try {
+    //filter only by gender
+    if (gender && !role) {
+      const filterByGender = await UserModel.find({ gender: gender });
+      return res.status(200).json(filterByGender);
+    }
+    //filter only by role
+    if (!gender && role) {
+      const filterByrole = await UserModel.find({ role: role });
+      return res.status(200).json(filterByrole);
+    }
+    //filter using both gender and role
+    if (gender && role) {
+      const filterByGender = await UserModel.find({
+        gender: gender,
+        role: role,
+      });
+      return res.status(200).json(filterByGender);
+    }
+
+    //without query
+
+    const allUsers = await UserModel.find();
+    return res.status(200).json(allUsers);
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getUserByQuery = async (req: Request, res: Response) => {
+  console.log("query: ", req.query);
+
   try {
     if (req.query) {
       const queryUsers = await UserModel.find(req.query);
       return res.status(200).json(queryUsers);
-    } else {
-      const allUsers = await UserModel.find();
-
-      return res.status(200).json(allUsers);
     }
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
