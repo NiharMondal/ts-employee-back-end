@@ -62,18 +62,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-export const getUserByQuery = async (req: Request, res: Response) => {
-  console.log("query: ", req.query);
-
-  try {
-    if (req.query) {
-      const queryUsers = await UserModel.find(req.query);
-      return res.status(200).json(queryUsers);
-    }
-  } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
 
 //get user by id
 export const getUserById = async (req: Request, res: Response) => {
