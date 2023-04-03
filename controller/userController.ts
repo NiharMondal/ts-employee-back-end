@@ -1,20 +1,22 @@
 import { Request, Response } from "express";
 import UserModel from "../model/userModel";
-import { TUser } from "../modelTypes/types";
+
+import { ReqQuery } from "../d.types";
 
 //create user
 export const createUser = async (req: Request, res: Response) => {
-  const { firstName, lastName, userName, gender, age, email, role }: TUser =
+  const { fullName, email, gender, salary, age, role, status, country } =
     req.body;
   try {
     const createdUser = await UserModel.create({
-      firstName,
-      lastName,
-      userName,
+      fullName,
       email,
       gender,
       age,
+      salary,
       role,
+      status,
+      country,
     });
 
     createdUser.save((err) => {
@@ -25,43 +27,50 @@ export const createUser = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    return res.status(400).json({ error: "Please Provide every input field" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Please Provide every input field" });
   }
 };
 
-// get all user and also by queryString
+// get all user
 
 export const getAllUsers = async (req: Request, res: Response) => {
-  const { gender, role } = req.query;
+  const { gender, role, status, country, sort, page, limit }: ReqQuery =
+    req.query;
+
+  const queryParams: any = {};
+
+  if (gender) queryParams.gender = gender;
+  if (role) queryParams.role = role;
+  if (status) queryParams.status = status;
+  if (country) queryParams.country = country;
+
+  const filterParams: any = {};
+
+  if (sort) {
+    const sortBy = sort.split(",").join(" ");
+    filterParams.sort = sortBy;
+  }
+
+  const convertedPageNum = parseInt(page!);
+  const convetedLimit = parseInt(limit!);
+
+  const skip = (convertedPageNum - 1) * convetedLimit;
 
   try {
-    //filter only by gender
-    if (gender && !role) {
-      const filterByGender = await UserModel.find({ gender: gender });
-      return res.status(200).json(filterByGender);
-    }
-    //filter only by role
-    if (!gender && role) {
-      const filterByrole = await UserModel.find({ role: role });
-      return res.status(200).json(filterByrole);
-    }
-    //filter using both gender and role
-    if (gender && role) {
-      const filterByGender = await UserModel.find({
-        gender: gender,
-        role: role,
-      });
-      return res.status(200).json(filterByGender);
-    }
-    
-    //without query
-    const allUsers = await UserModel.find();
-    return res.status(200).json(allUsers);
+    const allUser = await UserModel.find(queryParams)
+      .skip(skip)
+      .sort(filterParams.sort)
+      .limit(convetedLimit);
+    res.status(200).json(allUser);
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong!",
+    });
   }
 };
-
 
 //get user by id
 export const getUserById = async (req: Request, res: Response) => {
@@ -69,11 +78,13 @@ export const getUserById = async (req: Request, res: Response) => {
     const { id } = req.params;
     const findById = await UserModel.findById({ _id: id });
     if (!findById) {
-      return res.status(404).json({ error: "Id not found!" });
+      return res.status(404).json({ success: false, message: "ID not found!" });
     }
     return res.status(200).json(findById);
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -81,23 +92,36 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const checkUser = await UserModel.findOneAndDelete({
+      _id: req.params.id,
+      $and: [{ createdAt: { $exists: true } }],
+    });
 
-    const deleteUser = await UserModel.deleteOne({ _id: id });
-    if (deleteUser) {
-      return res
-        .status(200)
-        .json({ success: "User has been deleted successfully" });
+    if (checkUser) {
+      return res.json({
+        success: true,
+        message: "User deleted successfully",
+      });
     }
-  } catch (error) {
-    return res.status(404).json({ error: "User is not found!" });
+    return res
+      .status(405)
+      .json({ success: false, message: "You can not delete demo data" });
+  } catch (error: any) {
+    if (error.name === "CastError" && error.kind === "ObjectId") {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server error" });
   }
 };
 
 //update user
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { firstName, lastName, userName, email, gender, age, role }: TUser =
+  const { fullName, email, gender, salary, age, role, status, country } =
     req.body;
 
   //set update field
@@ -106,23 +130,25 @@ export const updateUser = async (req: Request, res: Response) => {
       { _id: id },
       {
         $set: {
-          firstName,
-          lastName,
+          fullName,
           email,
-          userName,
           gender,
+          salary,
           age,
           role,
+          status,
+          country,
         },
       }
     );
 
     if (updateById) {
       return res.status(200).json({
-        success: "User has been updated successfully",
+        success: true,
+        message: "User has been updated successfully",
       });
     }
   } catch (error) {
-    res.status(404).json({ error: "Could not update user" });
+    res.status(404).json({ success: false, message: "Could not update user" });
   }
 };

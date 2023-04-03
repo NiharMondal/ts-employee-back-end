@@ -3,36 +3,40 @@ import { TUser } from "../modelTypes/types";
 
 const userSchema = new Schema(
   {
-    firstName: {
+    fullName: {
       type: String,
-      required: [true, "Please Provide Firstname"],
+      required: [true, "Please provide name"],
     },
-    lastName: {
+    email: {
       type: String,
-      required: [true, "Please Provide Lastname"],
+      required: [true, "Please provide valid email address"],
     },
 
-    userName: {
-      type: String,
-      required: [true, "Please Provide your username"],
-    },
     gender: {
       type: String,
       reduired: [true, "Please provide your gender"],
     },
 
-    email: {
-      type: String,
-      required: [true, "Please Provide valid email address"],
-    },
     age: {
-      type: String,
-      required: [true, "Please Provide your age"],
+      type: Number,
+      required: [true, "Please provide your age"],
     },
-
+    salary: {
+      type: Number,
+      required: [true, "Please provide user salary"],
+    },
     role: {
       type: String,
-      required: true,
+      required: [true, "Please provide user role"],
+    },
+    status: {
+      type: String,
+      required: [true, "Please provide status"],
+    },
+
+    country: {
+      type: String,
+      required: [true, "Please provide country"],
     },
   },
   { timestamps: true }

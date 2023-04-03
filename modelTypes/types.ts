@@ -1,12 +1,13 @@
 //user type
 export type TUser = {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
-  userName: string;
   gender: string;
-  age: string;
+  age: number;
+  salary: number;
+  status: string;
   role: string;
+  country: string;
 };
 
 //login user types

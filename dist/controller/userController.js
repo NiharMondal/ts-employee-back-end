@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.deleteUser = exports.getUserById = exports.getUserByQuery = exports.getAllUsers = exports.createUser = void 0;
+exports.updateUser = exports.deleteUser = exports.getUserById = exports.getAllUsers = exports.createUser = void 0;
 const userModel_1 = __importDefault(require("../model/userModel"));
 //create user
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -40,50 +40,41 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createUser = createUser;
-// get all user and also by queryString
+// get all user
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { gender, role } = req.query;
+    const { gender, role, status, country, sort, page, limit } = req.query;
+    const queryParams = {};
+    if (gender)
+        queryParams.gender = gender;
+    if (role)
+        queryParams.role = role;
+    if (status)
+        queryParams.status = status;
+    if (country)
+        queryParams.country = country;
+    const filterParams = {};
+    if (sort) {
+        const sortBy = sort.split(",").join(" ");
+        filterParams.sort = sortBy;
+    }
+    const convertedPageNum = parseInt(page);
+    const convetedLimit = parseInt(limit);
+    const skip = (convertedPageNum - 1) * convetedLimit;
     try {
-        //filter only by gender
-        if (gender && !role) {
-            const filterByGender = yield userModel_1.default.find({ gender: gender });
-            return res.status(200).json(filterByGender);
-        }
-        //filter only by role
-        if (!gender && role) {
-            const filterByrole = yield userModel_1.default.find({ role: role });
-            return res.status(200).json(filterByrole);
-        }
-        //filter using both gender and role
-        if (gender && role) {
-            const filterByGender = yield userModel_1.default.find({
-                gender: gender,
-                role: role,
-            });
-            return res.status(200).json(filterByGender);
-        }
-        //without query
-        const allUsers = yield userModel_1.default.find();
-        return res.status(200).json(allUsers);
+        const allUser = yield userModel_1.default.find(queryParams)
+            .skip(skip)
+            .sort(filterParams.sort)
+            .limit(convetedLimit);
+        res.status(200).json(allUser);
     }
     catch (error) {
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong!",
+        });
     }
 });
 exports.getAllUsers = getAllUsers;
-const getUserByQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("query: ", req.query);
-    try {
-        if (req.query) {
-            const queryUsers = yield userModel_1.default.find(req.query);
-            return res.status(200).json(queryUsers);
-        }
-    }
-    catch (error) {
-        return res.status(500).json({ error: "Internal server error" });
-    }
-});
-exports.getUserByQuery = getUserByQuery;
 //get user by id
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
